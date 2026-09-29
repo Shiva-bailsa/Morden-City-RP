@@ -1,8 +1,11 @@
 const firebaseConfig = {
   apiKey: "AIzaSyB_qs827c8cFXy9Bye7DeuWTqQT_4fKmfI",
   authDomain: "gamehub-b4c2e.firebaseapp.com",
+  databaseURL: "https://gamehub-b4c2e-default-rtdb.firebaseio.com/",
   projectId: "gamehub-b4c2e",
   storageBucket: "gamehub-b4c2e.firebasestorage.app",
   messagingSenderId: "948689402387",
   appId: "1:948689402387:web:5320cf587be176ec0f9de6"
 };
+
+export { firebaseConfig };
