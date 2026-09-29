@@ -1,5 +1,5 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyB_qs827c8cFXy9Bye7DeuWTqQT_4fKmfI",
+  apiKey: "AIzaSyB_qs827c8cFXy9Bye7DeuWTqQT_4fKmI",
   authDomain: "gamehub-b4c2e.firebaseapp.com",
   databaseURL: "https://gamehub-b4c2e-default-rtdb.firebaseio.com/",
   projectId: "gamehub-b4c2e",
