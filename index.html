@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b12"><title>GameHub | Game Downloads</title>
+<style>
+:root{--bg:#080b12;--p:#111722;--line:#283347;--text:#f4f7fb;--muted:#91a0b5;--a:#7c5cff;--b:#5d8bff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#182044,#080b12 43%);color:var(--text);font-family:Inter,system-ui,Arial}
+header{height:68px;position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:0 5%;background:#080b12dd;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff0c}.logo{font-weight:900;font-size:24px}.logo span{color:var(--a)}header a{color:#aab5c6;text-decoration:none;font-size:14px}
+.hero{text-align:center;padding:70px 20px 42px}.pill{display:inline-block;padding:7px 12px;border:1px solid #303b55;border-radius:99px;color:#b5c0ff;font-size:12px;font-weight:800}.hero h1{font-size:clamp(42px,9vw,76px);line-height:1;letter-spacing:-3px;margin:18px 0}.hero h1 span{background:linear-gradient(90deg,#9c7cff,#6ca7ff);-webkit-background-clip:text;color:transparent}.hero p{max-width:650px;margin:auto;color:var(--muted);line-height:1.6}
+.search{max-width:680px;margin:27px auto 0}.search input{width:100%;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:#111722;color:#fff;font-size:15px;outline:0}.search input:focus{border-color:var(--a)}
+.wrap{width:90%;max-width:1180px;margin:auto;padding-bottom:70px}.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}.filters button{border:1px solid var(--line);background:#111722;color:#9eabbd;padding:9px 15px;border-radius:99px}.filters button.active{background:var(--a);color:#fff;border-color:var(--a)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:18px}.card{overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#111722}.cover{width:100%;aspect-ratio:16/10;object-fit:cover;background:#18202c}.body{padding:15px}.body h2{font-size:19px;margin:0 0 7px}.meta{font-size:12px;color:#8493a8}.desc{color:#a9b4c3;font-size:13px;line-height:1.5;margin-top:10px;min-height:39px}.download{display:block;text-align:center;margin-top:14px;padding:12px;border-radius:11px;background:linear-gradient(135deg,var(--a),var(--b));color:white;text-decoration:none;font-weight:800}.count{text-align:center;color:#69778c;font-size:11px;margin-top:8px}.empty{text-align:center;color:#718096;padding:70px 0;grid-column:1/-1}
+footer{text-align:center;border-top:1px solid #ffffff0b;padding:25px;color:#637085;font-size:12px}@media(max-width:600px){.hero{padding-top:55px}.hero h1{letter-spacing:-2px}.wrap{width:92%}.grid{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="logo">Game<span>Hub</span></div><a href="admin.html">Admin Panel ↗</a></header>
+<section class="hero"><div class="pill">🎮 GAMING DOWNLOAD HUB</div><h1>Find your next <span>game.</span></h1><p>Browse the GameHub library and open the download link for each listed game.</p><div class="search"><input id="search" placeholder="Search games or platforms..." autocomplete="off"></div></section>
+<main class="wrap"><div id="filters" class="filters"></div><div id="grid" class="grid"><div class="empty">Loading games...</div></div></main>
+<footer>© 2026 GameHub · GitHub Pages + Firebase</footer>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import {getDatabase,ref,onValue,update} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+import {firebaseConfig} from "./firebase-config.js";
+const app=initializeApp(firebaseConfig),db=getDatabase(app),gamesRef=ref(db,"games");
+const placeholder="https://placehold.co/1000x625/151c29/eef2ff?text=GAME+COVER"; let games=[],cat="All";
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function url(s){try{const u=new URL(s,location.href);return ["http:","https:"].includes(u.protocol)?u.href:"#"}catch{return "#"}}
+function filters(){const cats=["All",...new Set(games.map(g=>g.category).filter(Boolean))];$("filters").innerHTML=cats.map(x=>`<button class="${x===cat?"active":""}" data-c="${esc(x)}">${esc(x)}</button>`).join("");document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{cat=b.dataset.c;filters();render()})}
+function render(){const q=$("search").value.toLowerCase().trim(),list=games.filter(g=>(cat==="All"||g.category===cat)&&`${g.name} ${g.description} ${g.category}`.toLowerCase().includes(q));$("grid").innerHTML=list.length?list.map(g=>`<article class="card"><img class="cover" src="${url(g.cover||placeholder)}" alt="${esc(g.name)}" loading="lazy"><div class="body"><h2>${esc(g.name)}</h2><div class="meta">${esc(g.category||"Game")} · v${esc(g.version||"1.0")} · ${esc(g.size||"N/A")}</div><div class="desc">${esc(g.description||"Game download")}</div><a class="download" target="_blank" rel="noopener" href="${url(g.download)}" data-id="${esc(g.id)}">⬇ Download</a><div class="count">${g.downloads||0} downloads</div></div></article>`).join(""):`<div class="empty">No games found.</div>`;document.querySelectorAll("[data-id]").forEach(a=>a.onclick=()=>update(ref(db,"games/"+a.dataset.id),{downloads:(games.find(g=>g.id===a.dataset.id)?.downloads||0)+1}))}
+$("search").oninput=render;onValue(gamesRef,s=>{const v=s.val()||{};games=Object.entries(v).map(([id,g])=>({...g,id}));games.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));filters();render()});
+</script></body></html>
