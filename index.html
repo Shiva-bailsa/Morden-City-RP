@@ -1,31 +1,1634 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080b12"><title>GameHub | Game Downloads</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050711">
+
+<title>GameHub | Download & Play</title>
+
 <style>
-:root{--bg:#080b12;--p:#111722;--line:#283347;--text:#f4f7fb;--muted:#91a0b5;--a:#7c5cff;--b:#5d8bff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#182044,#080b12 43%);color:var(--text);font-family:Inter,system-ui,Arial}
-header{height:68px;position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:0 5%;background:#080b12dd;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff0c}.logo{font-weight:900;font-size:24px}.logo span{color:var(--a)}header a{color:#aab5c6;text-decoration:none;font-size:14px}
-.hero{text-align:center;padding:70px 20px 42px}.pill{display:inline-block;padding:7px 12px;border:1px solid #303b55;border-radius:99px;color:#b5c0ff;font-size:12px;font-weight:800}.hero h1{font-size:clamp(42px,9vw,76px);line-height:1;letter-spacing:-3px;margin:18px 0}.hero h1 span{background:linear-gradient(90deg,#9c7cff,#6ca7ff);-webkit-background-clip:text;color:transparent}.hero p{max-width:650px;margin:auto;color:var(--muted);line-height:1.6}
-.search{max-width:680px;margin:27px auto 0}.search input{width:100%;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:#111722;color:#fff;font-size:15px;outline:0}.search input:focus{border-color:var(--a)}
-.wrap{width:90%;max-width:1180px;margin:auto;padding-bottom:70px}.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}.filters button{border:1px solid var(--line);background:#111722;color:#9eabbd;padding:9px 15px;border-radius:99px}.filters button.active{background:var(--a);color:#fff;border-color:var(--a)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:18px}.card{overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#111722}.cover{width:100%;aspect-ratio:16/10;object-fit:cover;background:#18202c}.body{padding:15px}.body h2{font-size:19px;margin:0 0 7px}.meta{font-size:12px;color:#8493a8}.desc{color:#a9b4c3;font-size:13px;line-height:1.5;margin-top:10px;min-height:39px}.download{display:block;text-align:center;margin-top:14px;padding:12px;border-radius:11px;background:linear-gradient(135deg,var(--a),var(--b));color:white;text-decoration:none;font-weight:800}.count{text-align:center;color:#69778c;font-size:11px;margin-top:8px}.empty{text-align:center;color:#718096;padding:70px 0;grid-column:1/-1}
-footer{text-align:center;border-top:1px solid #ffffff0b;padding:25px;color:#637085;font-size:12px}@media(max-width:600px){.hero{padding-top:55px}.hero h1{letter-spacing:-2px}.wrap{width:92%}.grid{grid-template-columns:1fr}}
-</style></head><body>
-<header><div class="logo">Game<span>Hub</span></div><a href="admin.html">Admin Panel ↗</a></header>
-<section class="hero"><div class="pill">🎮 GAMING DOWNLOAD HUB</div><h1>Find your next <span>game.</span></h1><p>Browse the GameHub library and open the download link for each listed game.</p><div class="search"><input id="search" placeholder="Search games or platforms..." autocomplete="off"></div></section>
-<main class="wrap"><div id="filters" class="filters"></div><div id="grid" class="grid"><div class="empty">Loading games...</div></div></main>
-<footer>© 2026 GameHub · GitHub Pages + Firebase</footer>
+
+:root{
+  --bg:#030611;
+  --bg2:#071022;
+  --panel:#091426;
+  --panel2:#0d1930;
+  --line:#18355d;
+  --text:#f7f8ff;
+  --muted:#8fa4c4;
+  --purple:#8b35ff;
+  --pink:#d83cff;
+  --blue:#19a8ff;
+  --cyan:#36d8ff;
+  --green:#35e38a;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 50% -10%,#18265a 0%,#071022 28%,#030611 65%);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 15% 30%,rgba(139,53,255,.08),transparent 25%),
+    radial-gradient(circle at 85% 60%,rgba(25,168,255,.07),transparent 25%);
+  z-index:-1;
+}
+
+/* ================= HEADER ================= */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 4%;
+  background:rgba(3,6,17,.82);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(68,133,255,.16);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:25px;
+  font-weight:950;
+  letter-spacing:-1px;
+  white-space:nowrap;
+}
+
+.logo-icon{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  box-shadow:
+    0 0 25px rgba(139,53,255,.5);
+  font-size:21px;
+}
+
+.logo span{
+  color:#b75cff;
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.nav a{
+  color:#a9b9d4;
+  text-decoration:none;
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:700;
+  transition:.2s;
+}
+
+.nav a:hover{
+  color:#fff;
+  background:#111d38;
+}
+
+.nav .active{
+  color:#fff;
+  background:linear-gradient(135deg,#762cff,#b62cff);
+  box-shadow:0 0 20px rgba(139,53,255,.35);
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.search-mini{
+  width:210px;
+  height:40px;
+  border-radius:12px;
+  border:1px solid #1c4774;
+  background:#081426;
+  color:#fff;
+  padding:0 14px;
+  outline:none;
+}
+
+.search-mini:focus{
+  border-color:#8b35ff;
+  box-shadow:0 0 15px rgba(139,53,255,.2);
+}
+
+.discord-btn{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  text-decoration:none;
+  color:#fff;
+  font-size:13px;
+  font-weight:850;
+  padding:11px 17px;
+  border-radius:11px;
+  background:linear-gradient(135deg,#7040ff,#9c38ff);
+  box-shadow:0 0 22px rgba(139,53,255,.35);
+  transition:.2s;
+}
+
+.discord-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 30px rgba(139,53,255,.6);
+}
+
+/* ================= HERO ================= */
+
+.hero{
+  position:relative;
+  min-height:420px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  border-bottom:1px solid rgba(56,119,206,.2);
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(3,6,17,.98) 0%,
+      rgba(3,6,17,.86) 28%,
+      rgba(3,6,17,.35) 65%,
+      rgba(3,6,17,.8) 100%
+    ),
+    url("hero-banner.jpg");
+
+  background-size:cover;
+  background-position:center;
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      0deg,
+      #030611 0%,
+      transparent 25%,
+      transparent 75%,
+      rgba(3,6,17,.35)
+    );
+  pointer-events:none;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  width:92%;
+  max-width:1180px;
+  margin:auto;
+  padding:65px 0;
+}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 13px;
+  border:1px solid #713dff;
+  border-radius:50px;
+  background:rgba(71,31,139,.25);
+  color:#d8c7ff;
+  font-size:12px;
+  font-weight:850;
+  box-shadow:0 0 20px rgba(139,53,255,.2);
+}
+
+.hero h1{
+  max-width:650px;
+  margin:18px 0 12px;
+  font-size:clamp(43px,7vw,76px);
+  line-height:.98;
+  letter-spacing:-4px;
+  font-weight:950;
+}
+
+.hero h1 span{
+  background:linear-gradient(
+    90deg,
+    #a33cff,
+    #e13bff,
+    #39c7ff
+  );
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  max-width:570px;
+  color:#b5c6df;
+  line-height:1.65;
+  font-size:15px;
+}
+
+.hero-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:20px 0;
+}
+
+.hero-tag{
+  color:#c4d2e8;
+  background:rgba(9,22,42,.75);
+  border:1px solid #234568;
+  border-radius:30px;
+  padding:7px 11px;
+  font-size:11px;
+}
+
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:23px;
+}
+
+.primary-btn,
+.secondary-btn{
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:13px 21px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:850;
+  transition:.2s;
+}
+
+.primary-btn{
+  color:#fff;
+  background:linear-gradient(135deg,#7730ff,#d12eff);
+  box-shadow:0 0 28px rgba(139,53,255,.4);
+}
+
+.primary-btn:hover{
+  transform:translateY(-2px);
+}
+
+.secondary-btn{
+  color:#d5e4ff;
+  border:1px solid #2773b4;
+  background:rgba(5,15,31,.7);
+}
+
+.secondary-btn:hover{
+  border-color:#42b9ff;
+  background:#0b1d35;
+}
+
+/* ================= MAIN ================= */
+
+.container{
+  width:92%;
+  max-width:1180px;
+  margin:auto;
+}
+
+/* ================= CATEGORIES ================= */
+
+.categories{
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  padding:22px 0 8px;
+  scrollbar-width:none;
+}
+
+.categories::-webkit-scrollbar{
+  display:none;
+}
+
+.category{
+  flex:0 0 auto;
+  min-width:105px;
+  height:74px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  border:1px solid #17375e;
+  border-radius:14px;
+  background:linear-gradient(180deg,#09172c,#061020);
+  color:#9db0ce;
+  cursor:pointer;
+  transition:.2s;
+  font-size:11px;
+  font-weight:750;
+}
+
+.category-icon{
+  font-size:22px;
+}
+
+.category:hover{
+  border-color:#6e39ff;
+  transform:translateY(-2px);
+}
+
+.category.active{
+  color:#fff;
+  border-color:#9c38ff;
+  background:linear-gradient(
+    145deg,
+    rgba(123,45,255,.35),
+    rgba(15,35,65,.9)
+  );
+  box-shadow:0 0 25px rgba(139,53,255,.2);
+}
+
+/* ================= SECTION ================= */
+
+.section{
+  padding-top:34px;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin-bottom:17px;
+}
+
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.section-title h2{
+  margin:0;
+  font-size:25px;
+  letter-spacing:-.8px;
+}
+
+.section-title p{
+  margin:4px 0 0;
+  color:#7187a6;
+  font-size:12px;
+}
+
+.view-all{
+  color:#53bfff;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:800;
+}
+
+/* ================= GAME GRID ================= */
+
+.game-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:15px;
+}
+
+.game-card{
+  overflow:hidden;
+  position:relative;
+  background:linear-gradient(
+    180deg,
+    #0b1930,
+    #071020
+  );
+  border:1px solid #173b65;
+  border-radius:15px;
+  transition:.25s;
+}
+
+.game-card:hover{
+  transform:translateY(-5px);
+  border-color:#6f3cff;
+  box-shadow:
+    0 12px 35px rgba(0,0,0,.4),
+    0 0 25px rgba(111,60,255,.16);
+}
+
+.cover-wrap{
+  position:relative;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  background:#0a1425;
+}
+
+.cover{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:.4s;
+}
+
+.game-card:hover .cover{
+  transform:scale(1.06);
+}
+
+.cover-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    0deg,
+    rgba(3,7,17,.8),
+    transparent 55%
+  );
+}
+
+.new-badge{
+  position:absolute;
+  top:9px;
+  right:9px;
+  padding:5px 8px;
+  border-radius:7px;
+  background:#9c38ff;
+  color:#fff;
+  font-size:9px;
+  font-weight:900;
+}
+
+.game-body{
+  padding:12px;
+}
+
+.game-name{
+  margin:0 0 7px;
+  font-size:14px;
+  font-weight:850;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.game-meta{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+.tag{
+  padding:4px 7px;
+  border-radius:6px;
+  color:#91b7dc;
+  background:#0a213b;
+  border:1px solid #16426b;
+  font-size:9px;
+  font-weight:750;
+}
+
+.game-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:11px;
+  color:#8298b6;
+  font-size:10px;
+}
+
+.downloads{
+  color:#ffbd42;
+}
+
+.download-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  width:100%;
+  margin-top:10px;
+  padding:9px;
+  border-radius:9px;
+  text-decoration:none;
+  color:#fff;
+  background:linear-gradient(135deg,#7431ff,#c32fff);
+  font-size:11px;
+  font-weight:850;
+  transition:.2s;
+}
+
+.download-btn:hover{
+  box-shadow:0 0 18px rgba(139,53,255,.35);
+}
+
+/* ================= EMPTY ================= */
+
+.empty{
+  grid-column:1/-1;
+  padding:70px 20px;
+  text-align:center;
+  color:#7187a6;
+  border:1px dashed #1b3d63;
+  border-radius:15px;
+}
+
+/* ================= DISCORD ================= */
+
+.discord-banner{
+  position:relative;
+  overflow:hidden;
+  margin:48px 0 25px;
+  padding:24px 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border:1px solid #713dff;
+  border-radius:17px;
+  background:
+    radial-gradient(
+      circle at 80% 50%,
+      rgba(131,52,255,.5),
+      transparent 35%
+    ),
+    linear-gradient(90deg,#181052,#091a39);
+  box-shadow:0 0 30px rgba(97,44,255,.13);
+}
+
+.discord-banner h2{
+  margin:0 0 5px;
+  font-size:23px;
+}
+
+.discord-banner p{
+  margin:0;
+  color:#9db1d0;
+  font-size:12px;
+}
+
+.discord-big{
+  font-size:47px;
+}
+
+.discord-join{
+  flex:0 0 auto;
+  text-decoration:none;
+  color:#fff;
+  background:linear-gradient(135deg,#6d3cff,#b837ff);
+  padding:12px 18px;
+  border-radius:11px;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 0 20px rgba(139,53,255,.3);
+}
+
+/* ================= FEATURES ================= */
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
+  padding:0 0 50px;
+}
+
+.feature{
+  padding:18px;
+  border:1px solid #16365b;
+  border-radius:15px;
+  background:#071225;
+}
+
+.feature-icon{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#0d2845;
+  margin-bottom:12px;
+  font-size:19px;
+}
+
+.feature h3{
+  margin:0 0 5px;
+  font-size:13px;
+}
+
+.feature p{
+  margin:0;
+  color:#748aa8;
+  line-height:1.5;
+  font-size:10px;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+  border-top:1px solid #102846;
+  padding:28px 0;
+  background:#02050d;
+}
+
+.footer-inner{
+  width:92%;
+  max-width:1180px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+.footer-brand{
+  color:#fff;
+  font-weight:900;
+  font-size:20px;
+}
+
+.footer-brand span{
+  color:#9c3cff;
+}
+
+.footer-text{
+  color:#627894;
+  font-size:10px;
+  margin-top:4px;
+}
+
+.footer-links{
+  display:flex;
+  gap:17px;
+}
+
+.footer-links a{
+  color:#7890b0;
+  text-decoration:none;
+  font-size:11px;
+}
+
+.footer-links a:hover{
+  color:#fff;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:1050px){
+
+  .game-grid{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .nav{
+    display:none;
+  }
+
+  .search-mini{
+    width:170px;
+  }
+
+}
+
+@media(max-width:800px){
+
+  header{
+    padding:0 3%;
+  }
+
+  .search-mini{
+    display:none;
+  }
+
+  .hero{
+    min-height:470px;
+    background-position:center;
+  }
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .game-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .features{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .discord-banner{
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .footer-inner{
+    flex-direction:column;
+    text-align:center;
+  }
+
+}
+
+@media(max-width:480px){
+
+  .logo{
+    font-size:20px;
+  }
+
+  .logo-icon{
+    width:35px;
+    height:35px;
+  }
+
+  .header-right .discord-btn{
+    padding:9px 11px;
+    font-size:11px;
+  }
+
+  .hero{
+    min-height:510px;
+  }
+
+  .hero-content{
+    padding-top:45px;
+  }
+
+  .hero h1{
+    font-size:43px;
+    letter-spacing:-2.5px;
+  }
+
+  .hero p{
+    font-size:13px;
+  }
+
+  .game-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+
+  .game-body{
+    padding:10px;
+  }
+
+  .game-name{
+    font-size:12px;
+  }
+
+  .features{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .section-title h2{
+    font-size:21px;
+  }
+
+  .discord-banner{
+    padding:22px 15px;
+  }
+
+  .discord-banner h2{
+    font-size:19px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+  <a href="index.html" style="text-decoration:none;color:white">
+
+    <div class="logo">
+      <div class="logo-icon">🎮</div>
+      Game<span>Hub</span>
+    </div>
+
+  </a>
+
+
+  <nav class="nav">
+
+    <a class="active" href="#home">⌂ Home</a>
+
+    <a href="#featured">🎮 Games</a>
+
+    <a href="#categories">▦ Categories</a>
+
+    <a href="#about">◉ About</a>
+
+  </nav>
+
+
+  <div class="header-right">
+
+    <input
+      id="searchMini"
+      class="search-mini"
+      placeholder="Search games..."
+      autocomplete="off"
+    >
+
+    <!-- DISCORD BUTTON -->
+
+    <a
+      class="discord-btn"
+      href="https://discord.gg/qQTJrQtXXg"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      🎮 Discord
+    </a>
+
+  </div>
+
+</header>
+
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="home">
+
+  <div class="hero-content">
+
+    <div class="hero-badge">
+      ✨ WELCOME TO GAMEHUB
+    </div>
+
+    <h1>
+      YOUR ULTIMATE
+      <span>GAMING DESTINATION</span>
+    </h1>
+
+    <p>
+      Discover games, updates and downloads
+      in one place. Explore the GameHub library
+      and find your next game.
+    </p>
+
+
+    <div class="hero-tags">
+
+      <div class="hero-tag">🤖 Android</div>
+      <div class="hero-tag">💻 PC</div>
+      <div class="hero-tag">🌎 Open World</div>
+      <div class="hero-tag">⚔️ Action</div>
+      <div class="hero-tag">🏆 Adventure</div>
+      <div class="hero-tag">✨ And More...</div>
+
+    </div>
+
+
+    <div class="hero-actions">
+
+      <a
+        href="#featured"
+        class="primary-btn"
+      >
+        🎮 Browse Games →
+      </a>
+
+
+      <!-- DISCORD HERO BUTTON -->
+
+      <a
+        href="https://discord.gg/qQTJrQtXXg"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="secondary-btn"
+      >
+        💬 Join Discord
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<main class="container">
+
+
+<!-- ================= CATEGORIES ================= -->
+
+<section id="categories">
+
+  <div class="categories" id="categoriesList">
+
+    <button class="category active" data-category="All">
+      <span class="category-icon">▦</span>
+      All Games
+    </button>
+
+    <button class="category" data-category="Action">
+      <span class="category-icon">🎯</span>
+      Action
+    </button>
+
+    <button class="category" data-category="Adventure">
+      <span class="category-icon">⛰️</span>
+      Adventure
+    </button>
+
+    <button class="category" data-category="Racing">
+      <span class="category-icon">🏁</span>
+      Racing
+    </button>
+
+    <button class="category" data-category="RPG">
+      <span class="category-icon">🛡️</span>
+      RPG
+    </button>
+
+    <button class="category" data-category="Sports">
+      <span class="category-icon">⚽</span>
+      Sports
+    </button>
+
+    <button class="category" data-category="Simulation">
+      <span class="category-icon">⚙️</span>
+      Simulation
+    </button>
+
+    <button class="category" data-category="Strategy">
+      <span class="category-icon">♟️</span>
+      Strategy
+    </button>
+
+    <button class="category" data-category="Puzzle">
+      <span class="category-icon">🧩</span>
+      Puzzle
+    </button>
+
+    <button class="category" data-category="Arcade">
+      <span class="category-icon">🎮</span>
+      Arcade
+    </button>
+
+  </div>
+
+</section>
+
+
+
+<!-- ================= FEATURED ================= -->
+
+<section class="section" id="featured">
+
+  <div class="section-head">
+
+    <div class="section-title">
+
+      <div>
+        <h2>🔥 Featured Games</h2>
+        <p>Handpicked games from the GameHub library</p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="game-grid"
+    id="featuredGrid"
+  >
+
+    <div class="empty">
+      Loading games...
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ================= POPULAR ================= -->
+
+<section class="section">
+
+  <div class="section-head">
+
+    <div class="section-title">
+
+      <div>
+        <h2>👑 Popular Games</h2>
+        <p>Most downloaded games on GameHub</p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="game-grid"
+    id="popularGrid"
+  >
+
+    <div class="empty">
+      Loading games...
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ================= DISCORD ================= -->
+
+<section class="discord-banner">
+
+  <div class="discord-big">
+    💜
+  </div>
+
+
+  <div style="flex:1">
+
+    <h2>
+      Join Our Discord Server
+    </h2>
+
+    <p>
+      Get game updates, announcements,
+      giveaways and more.
+    </p>
+
+  </div>
+
+
+  <a
+    href="https://discord.gg/qQTJrQtXXg"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="discord-join"
+  >
+    💬 Join Now →
+  </a>
+
+</section>
+
+
+
+<!-- ================= FEATURES ================= -->
+
+<section id="about">
+
+  <div class="features">
+
+    <div class="feature">
+
+      <div class="feature-icon">⚡</div>
+
+      <h3>
+        Fast Downloads
+      </h3>
+
+      <p>
+        Get your games quickly
+        through high-speed links.
+      </p>
+
+    </div>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">🛡️</div>
+
+      <h3>
+        Game Information
+      </h3>
+
+      <p>
+        Clear game details,
+        versions and download sizes.
+      </p>
+
+    </div>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">📱</div>
+
+      <h3>
+        Mobile Friendly
+      </h3>
+
+      <p>
+        Browse GameHub comfortably
+        from your phone.
+      </p>
+
+    </div>
+
+
+    <div class="feature">
+
+      <div class="feature-icon">🔄</div>
+
+      <h3>
+        Regular Updates
+      </h3>
+
+      <p>
+        New games can be added
+        directly through the Admin Panel.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+  <div class="footer-inner">
+
+    <div>
+
+      <div class="footer-brand">
+        🎮 Game<span>Hub</span>
+      </div>
+
+      <div class="footer-text">
+        Play More · Worry Less
+      </div>
+
+    </div>
+
+
+    <div class="footer-links">
+
+      <a href="#home">Home</a>
+
+      <a href="#featured">Games</a>
+
+      <a href="#categories">Categories</a>
+
+      <a href="#about">About</a>
+
+      <a
+        href="https://discord.gg/qQTJrQtXXg"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Discord
+      </a>
+
+    </div>
+
+
+    <div class="footer-text">
+      © 2026 GameHub. All rights reserved.
+    </div>
+
+  </div>
+
+</footer>
+
+
+
+<!-- ================= FIREBASE ================= -->
+
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-import {getDatabase,ref,onValue,update} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
-import {firebaseConfig} from "./firebase-config.js";
-const app=initializeApp(firebaseConfig),db=getDatabase(app),gamesRef=ref(db,"games");
-const placeholder="https://placehold.co/1000x625/151c29/eef2ff?text=GAME+COVER"; let games=[],cat="All";
-const $=id=>document.getElementById(id);
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function url(s){try{const u=new URL(s,location.href);return ["http:","https:"].includes(u.protocol)?u.href:"#"}catch{return "#"}}
-function filters(){const cats=["All",...new Set(games.map(g=>g.category).filter(Boolean))];$("filters").innerHTML=cats.map(x=>`<button class="${x===cat?"active":""}" data-c="${esc(x)}">${esc(x)}</button>`).join("");document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{cat=b.dataset.c;filters();render()})}
-function render(){const q=$("search").value.toLowerCase().trim(),list=games.filter(g=>(cat==="All"||g.category===cat)&&`${g.name} ${g.description} ${g.category}`.toLowerCase().includes(q));$("grid").innerHTML=list.length?list.map(g=>`<article class="card"><img class="cover" src="${url(g.cover||placeholder)}" alt="${esc(g.name)}" loading="lazy"><div class="body"><h2>${esc(g.name)}</h2><div class="meta">${esc(g.category||"Game")} · v${esc(g.version||"1.0")} · ${esc(g.size||"N/A")}</div><div class="desc">${esc(g.description||"Game download")}</div><a class="download" target="_blank" rel="noopener" href="${url(g.download)}" data-id="${esc(g.id)}">⬇ Download</a><div class="count">${g.downloads||0} downloads</div></div></article>`).join(""):`<div class="empty">No games found.</div>`;document.querySelectorAll("[data-id]").forEach(a=>a.onclick=()=>update(ref(db,"games/"+a.dataset.id),{downloads:(games.find(g=>g.id===a.dataset.id)?.downloads||0)+1}))}
-$("search").oninput=render;onValue(gamesRef,s=>{const v=s.val()||{};games=Object.entries(v).map(([id,g])=>({...g,id}));games.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));filters();render()});
-</script></body></html>
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  onValue,
+  update
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+import {
+  firebaseConfig
+} from "./firebase-config.js";
+
+
+const app =
+  initializeApp(firebaseConfig);
+
+const db =
+  getDatabase(app);
+
+const gamesRef =
+  ref(db,"games");
+
+
+const placeholder =
+  "https://placehold.co/1000x625/071225/eef2ff?text=GAME+COVER";
+
+
+let games = [];
+
+let currentCategory = "All";
+
+
+
+/* ================= SEARCH ================= */
+
+const searchMain = document.getElementById("searchMini");
+
+
+
+/* ================= ESCAPE ================= */
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(
+      /[&<>"']/g,
+      c => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+      }[c])
+    );
+
+}
+
+
+
+/* ================= URL ================= */
+
+function safeUrl(value){
+
+  try{
+
+    const u =
+      new URL(value,location.href);
+
+    if(
+      u.protocol === "http:" ||
+      u.protocol === "https:"
+    ){
+
+      return u.href;
+
+    }
+
+  }catch(e){}
+
+  return "#";
+
+}
+
+
+
+/* ================= FILTER ================= */
+
+function filteredGames(){
+
+  const query =
+    searchMain.value
+      .toLowerCase()
+      .trim();
+
+
+  return games.filter(game => {
+
+    const categoryOK =
+      currentCategory === "All" ||
+      String(game.category || "")
+        .toLowerCase() ===
+      currentCategory.toLowerCase();
+
+
+    const searchOK =
+      `${game.name || ""}
+       ${game.description || ""}
+       ${game.category || ""}`
+      .toLowerCase()
+      .includes(query);
+
+
+    return categoryOK && searchOK;
+
+  });
+
+}
+
+
+
+/* ================= CARD ================= */
+
+function card(game,index){
+
+  const cover =
+    safeUrl(
+      game.cover || placeholder
+    );
+
+  const download =
+    safeUrl(game.download);
+
+
+  return `
+
+    <article class="game-card">
+
+      <div class="cover-wrap">
+
+        <img
+          class="cover"
+          src="${cover}"
+          alt="${esc(game.name || "Game")}"
+          loading="lazy"
+        >
+
+        <div class="cover-overlay"></div>
+
+        ${
+          index < 2
+          ? `<div class="new-badge">FEATURED</div>`
+          : ""
+        }
+
+      </div>
+
+
+      <div class="game-body">
+
+        <h3 class="game-name">
+          ${esc(game.name || "Unknown Game")}
+        </h3>
+
+
+        <div class="game-meta">
+
+          <span class="tag">
+            ${esc(game.category || "Game")}
+          </span>
+
+          <span class="tag">
+            v${esc(game.version || "1.0")}
+          </span>
+
+        </div>
+
+
+        <div class="game-bottom">
+
+          <span class="downloads">
+            ⭐ ${game.downloads || 0} downloads
+          </span>
+
+          <span>
+            ${esc(game.size || "N/A")}
+          </span>
+
+        </div>
+
+
+        <a
+          class="download-btn"
+          href="${download}"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-id="${esc(game.id)}"
+        >
+          ⬇ Download
+        </a>
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+
+/* ================= RENDER ================= */
+
+function render(){
+
+  const list =
+    filteredGames();
+
+
+  const featured =
+    [...list]
+      .sort(
+        (a,b) =>
+          (b.createdAt || 0) -
+          (a.createdAt || 0)
+      )
+      .slice(0,5);
+
+
+  const popular =
+    [...list]
+      .sort(
+        (a,b) =>
+          (b.downloads || 0) -
+          (a.downloads || 0)
+      )
+      .slice(0,6);
+
+
+  const featuredGrid =
+    document.getElementById("featuredGrid");
+
+  const popularGrid =
+    document.getElementById("popularGrid");
+
+
+  featuredGrid.innerHTML =
+    featured.length
+    ? featured.map(card).join("")
+    : `<div class="empty">
+         No games found.
+       </div>`;
+
+
+  popularGrid.innerHTML =
+    popular.length
+    ? popular.map(card).join("")
+    : `<div class="empty">
+         No games found.
+       </div>`;
+
+
+  attachDownloadCounters();
+
+}
+
+
+
+/* ================= DOWNLOAD COUNTER ================= */
+
+function attachDownloadCounters(){
+
+  document
+    .querySelectorAll("[data-id]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const id =
+            button.dataset.id;
+
+
+          const game =
+            games.find(
+              g => g.id === id
+            );
+
+
+          if(!game){
+            return;
+          }
+
+
+          const newCount =
+            Number(game.downloads || 0) + 1;
+
+
+          update(
+            ref(db,"games/" + id),
+            {
+              downloads:newCount
+            }
+          );
+
+        }
+      );
+
+    });
+
+}
+
+
+
+/* ================= CATEGORY ================= */
+
+document
+  .querySelectorAll(".category")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".category")
+          .forEach(btn =>
+            btn.classList.remove("active")
+          );
+
+
+        button.classList.add("active");
+
+
+        currentCategory =
+          button.dataset.category;
+
+
+        render();
+
+      }
+    );
+
+  });
+
+
+
+/* ================= SEARCH ================= */
+
+searchMain.addEventListener(
+  "input",
+  render
+);
+
+
+
+/* ================= FIREBASE DATA ================= */
+
+onValue(
+  gamesRef,
+  snapshot => {
+
+    const data =
+      snapshot.val() || {};
+
+
+    games =
+      Object.entries(data)
+        .map(([id,game]) => ({
+          ...game,
+          id
+        }));
+
+
+    render();
+
+  },
+  error => {
+
+    console.error(error);
+
+
+    document.getElementById(
+      "featuredGrid"
+    ).innerHTML =
+      `<div class="empty">
+        Unable to load games.
+       </div>`;
+
+  }
+);
+
+</script>
+
+</body>
+</html>
