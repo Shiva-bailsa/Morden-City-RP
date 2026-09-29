@@ -1,9 +1,622 @@
-export const firebaseConfig = {
-  apiKey: "AIzaSyB_qs827c8cFXy9Bye7DeuWTqQT_4fKmfI",
-  authDomain: "gamehub-b4c2e.firebaseapp.com",
-  databaseURL: "https://gamehub-b4c2e-default-rtdb.firebaseio.com/",
-  projectId: "gamehub-b4c2e",
-  storageBucket: "gamehub-b4c2e.firebasestorage.app",
-  messagingSenderId: "948689402387",
-  appId: "1:948689402387:web:5320cf587be176ec0f9de6"
-};
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b12">
+<title>GameHub Admin</title>
+
+<style>
+:root{
+  --bg:#080b12;
+  --panel:#111722;
+  --line:#283347;
+  --text:#f5f7fb;
+  --muted:#93a0b2;
+  --primary:#7c5cff;
+  --danger:#d84a4a;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,Arial,sans-serif;
+}
+
+.wrap{
+  width:92%;
+  max-width:1050px;
+  margin:30px auto 60px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.logo{
+  font-size:24px;
+  font-weight:900;
+}
+
+.logo span{
+  color:var(--primary);
+}
+
+a{
+  color:#9aa8bb;
+  text-decoration:none;
+}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:18px;
+}
+
+h2{
+  margin-top:0;
+}
+
+.form{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+input{
+  width:100%;
+  padding:13px;
+  border:1px solid #303c51;
+  border-radius:10px;
+  background:#0b1018;
+  color:#fff;
+  outline:none;
+}
+
+input:focus{
+  border-color:var(--primary);
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.primary{
+  background:var(--primary);
+  color:#fff;
+  font-weight:800;
+}
+
+.danger{
+  background:#35171b;
+  color:#ff9a9a;
+  border:1px solid #64252a;
+}
+
+.note{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.6;
+  margin-top:12px;
+}
+
+.game{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  border-top:1px solid var(--line);
+  padding:14px 0;
+}
+
+.game:first-child{
+  border-top:0;
+}
+
+.game img{
+  width:95px;
+  height:60px;
+  object-fit:cover;
+  border-radius:9px;
+}
+
+.info{
+  flex:1;
+}
+
+.info small{
+  color:#7f8da1;
+}
+
+.login{
+  max-width:440px;
+  margin:80px auto;
+}
+
+.status{
+  font-size:13px;
+  margin:10px 0;
+  color:#9faabd;
+}
+
+.hidden{
+  display:none!important;
+}
+
+@media(max-width:650px){
+  .form{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+
+  .game img{
+    width:72px;
+    height:48px;
+  }
+
+  .game{
+    flex-wrap:wrap;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo">Game<span>Hub</span> Admin</div>
+    <a href="index.html">← Website</a>
+  </div>
+
+  <!-- LOGIN -->
+  <section id="login" class="panel login">
+
+    <h2>Admin Login</h2>
+
+    <form id="loginForm">
+
+      <input
+        id="email"
+        type="email"
+        placeholder="Admin email"
+        required
+      >
+
+      <br><br>
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Password"
+        required
+      >
+
+      <br><br>
+
+      <button class="primary" type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <div id="loginStatus" class="status"></div>
+
+  </section>
+
+
+  <!-- ADMIN APP -->
+  <section id="app" class="hidden">
+
+    <!-- ADD GAME -->
+    <div class="panel">
+
+      <h2>➕ Add Game</h2>
+
+      <form id="gameForm">
+
+        <div class="form">
+
+          <input
+            id="name"
+            placeholder="Game name"
+            required
+          >
+
+          <input
+            id="category"
+            placeholder="Android / PC"
+            required
+          >
+
+          <input
+            id="version"
+            placeholder="Version"
+            value="1.0"
+          >
+
+          <input
+            id="size"
+            placeholder="Size, e.g. 250 MB"
+          >
+
+          <input
+            id="cover"
+            class="full"
+            placeholder="Cover image URL"
+          >
+
+          <input
+            id="description"
+            class="full"
+            placeholder="Description"
+          >
+
+          <input
+            id="download"
+            class="full"
+            placeholder="Download URL"
+            required
+          >
+
+          <button
+            class="primary full"
+            type="submit"
+          >
+            Add Game
+          </button>
+
+        </div>
+
+      </form>
+
+      <div id="status" class="status"></div>
+
+    </div>
+
+
+    <!-- GAME LIST -->
+    <div class="panel">
+
+      <h2>🎮 Manage Games</h2>
+
+      <div id="list">
+        <div class="note">
+          Loading games...
+        </div>
+      </div>
+
+    </div>
+
+    <button id="logout" class="danger">
+      Logout
+    </button>
+
+  </section>
+
+</div>
+
+
+<script type="module">
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+  getDatabase,
+  ref,
+  push,
+  set,
+  remove,
+  onValue
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+import {
+  firebaseConfig
+} from "./firebase-config.js";
+
+
+/* Firebase */
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getDatabase(app);
+
+const placeholder =
+  "https://placehold.co/1000x625/151c29/eef2ff?text=GAME+COVER";
+
+
+/* Helpers */
+
+const $ = id => document.getElementById(id);
+
+let games = {};
+
+
+/* Escape HTML */
+
+function esc(value){
+
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[char])
+  );
+
+}
+
+
+/* LOGIN */
+
+$("loginForm").addEventListener("submit", async event => {
+
+  event.preventDefault();
+
+  $("loginStatus").textContent = "Signing in...";
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      $("email").value.trim(),
+      $("password").value
+    );
+
+    $("loginStatus").textContent = "";
+
+  }catch(error){
+
+    console.error(error);
+
+    $("loginStatus").textContent =
+      "Login failed. Check email/password.";
+
+  }
+
+});
+
+
+/* AUTH STATE */
+
+onAuthStateChanged(auth, user => {
+
+  if(user){
+
+    $("login").classList.add("hidden");
+
+    $("app").classList.remove("hidden");
+
+    loadGames();
+
+  }else{
+
+    $("login").classList.remove("hidden");
+
+    $("app").classList.add("hidden");
+
+  }
+
+});
+
+
+/* LOAD GAMES */
+
+function loadGames(){
+
+  onValue(
+    ref(db, "games"),
+    snapshot => {
+
+      games = snapshot.val() || {};
+
+      renderGames();
+
+    },
+    error => {
+
+      console.error(error);
+
+      $("list").innerHTML =
+        '<div class="note">Could not load games. Check Firebase Database rules.</div>';
+
+    }
+  );
+
+}
+
+
+/* RENDER */
+
+function renderGames(){
+
+  const entries = Object.entries(games);
+
+  if(!entries.length){
+
+    $("list").innerHTML =
+      '<div class="note">No games added yet.</div>';
+
+    return;
+
+  }
+
+  $("list").innerHTML = entries.map(
+    ([id, game]) => `
+
+      <div class="game">
+
+        <img
+          src="${esc(game.cover || placeholder)}"
+          alt=""
+        >
+
+        <div class="info">
+
+          <b>${esc(game.name)}</b>
+
+          <br>
+
+          <small>
+            ${esc(game.category)}
+            · v${esc(game.version || "1.0")}
+            · ${esc(game.size || "N/A")}
+            · ${game.downloads || 0} downloads
+          </small>
+
+        </div>
+
+        <button
+          class="danger"
+          data-delete="${esc(id)}"
+        >
+          Delete
+        </button>
+
+      </div>
+
+    `
+  ).join("");
+
+
+  document
+    .querySelectorAll("[data-delete]")
+    .forEach(button => {
+
+      button.addEventListener("click", async () => {
+
+        const id = button.dataset.delete;
+
+        if(!confirm("Delete this game?")){
+          return;
+        }
+
+        try{
+
+          await remove(
+            ref(db, "games/" + id)
+          );
+
+        }catch(error){
+
+          console.error(error);
+
+          alert(
+            "Could not delete game. Check Firebase rules."
+          );
+
+        }
+
+      });
+
+    });
+
+}
+
+
+/* ADD GAME */
+
+$("gameForm").addEventListener("submit", async event => {
+
+  event.preventDefault();
+
+  $("status").textContent = "Adding game...";
+
+  try{
+
+    const newGame = push(
+      ref(db, "games")
+    );
+
+    await set(newGame, {
+
+      name: $("name").value.trim(),
+
+      category: $("category").value.trim(),
+
+      version:
+        $("version").value.trim() || "1.0",
+
+      size:
+        $("size").value.trim() || "Not specified",
+
+      cover:
+        $("cover").value.trim() || placeholder,
+
+      description:
+        $("description").value.trim() ||
+        "Game download",
+
+      download:
+        $("download").value.trim(),
+
+      downloads: 0,
+
+      createdAt: Date.now()
+
+    });
+
+
+    event.target.reset();
+
+    $("version").value = "1.0";
+
+    $("status").textContent =
+      "Game added successfully.";
+
+  }catch(error){
+
+    console.error(error);
+
+    $("status").textContent =
+      "Could not add game. Check Firebase rules.";
+
+  }
+
+});
+
+
+/* LOGOUT */
+
+$("logout").addEventListener(
+  "click",
+  () => signOut(auth)
+);
+
+</script>
+
+</body>
+</html>
