@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b12"><title>GameHub Admin</title>
+<style>
+:root{--bg:#080b12;--panel:#111722;--line:#283347;--text:#f5f7fb;--muted:#93a0b2;--accent:#7c5cff;--danger:#d84a4a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial}.wrap{width:92%;max-width:1050px;margin:30px auto 60px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.logo{font-size:24px;font-weight:900}.logo span{color:var(--accent)}.top a{color:#9aa8bb;text-decoration:none}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:18px}.panel h2{margin-top:0}.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+input{width:100%;padding:13px;border:1px solid #303c51;border-radius:10px;background:#0b1018;color:#fff;outline:none}input:focus{border-color:var(--accent)}.full{grid-column:1/-1}
+button{border:0;border-radius:10px;padding:11px 15px;cursor:pointer}.primary{background:var(--accent);color:#fff;font-weight:800}.danger{background:#35171b;color:#ff9a9a;border:1px solid #64252a}
+.note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:12px}.game{display:flex;gap:14px;align-items:center;border-top:1px solid var(--line);padding:14px 0}.game:first-child{border-top:0}.game img{width:95px;height:60px;object-fit:cover;border-radius:9px}.info{flex:1}.info b{font-size:16px}.info small{color:#7f8da1}.actions{display:flex;gap:8px}
+@media(max-width:650px){.form{grid-template-columns:1fr}.full{grid-column:auto}.game{align-items:flex-start}.game img{width:72px;height:48px}.actions{flex-direction:column}.actions button{padding:8px}.top .logo{font-size:20px}}
+</style>
+</head>
+<body><div class="wrap">
+<div class="top"><div class="logo">Game<span>Hub</span> Admin</div><a href="index.html">← Website</a></div>
+<div class="panel">
+<h2>➕ Add Game</h2>
+<form id="form"><div class="form">
+<input id="name" placeholder="Game name" required>
+<input id="category" placeholder="Category, e.g. Android / PC" required>
+<input id="version" placeholder="Version" value="1.0">
+<input id="size" placeholder="Size, e.g. 250 MB">
+<input id="cover" class="full" placeholder="Game cover image URL">
+<input id="description" class="full" placeholder="Short description">
+<input id="download" class="full" placeholder="Download URL" required>
+<button class="primary full">Add Game</button>
+</div></form>
+<div class="note"><b>Important:</b> this testing admin stores data in your browser's localStorage. GitHub Pages does not provide a shared database, authentication, or server-side admin panel by itself. Do not put passwords or private data here.</div>
+</div>
+<div class="panel"><h2>🎮 Manage Games</h2><div id="list"></div></div>
+</div>
+<script>
+const ph="https://placehold.co/1000x625/151c29/eef2ff?text=GAME+COVER";
+let games=JSON.parse(localStorage.getItem("gamehub_games")||"[]");
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function save(){localStorage.setItem("gamehub_games",JSON.stringify(games))}
+function render(){
+ $("list").innerHTML=games.length?games.map((g,i)=>`<div class="game"><img src="${esc(g.cover||ph)}" alt="">
+ <div class="info"><b>${esc(g.name)}</b><br><small>${esc(g.category)} · v${esc(g.version||"1.0")} · ${esc(g.size||"N/A")} · ${g.downloads||0} downloads</small></div>
+ <div class="actions"><button class="danger" data-del="${i}">Delete</button></div></div>`).join(""):"<p class='note'>No games added yet.</p>";
+ document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{const i=Number(b.dataset.del);if(confirm("Delete this game?")){games.splice(i,1);save();render()}})
+}
+$("form").addEventListener("submit",e=>{
+ e.preventDefault();
+ games.unshift({name:$("name").value.trim(),category:$("category").value.trim(),version:$("version").value.trim()||"1.0",size:$("size").value.trim()||"Not specified",cover:$("cover").value.trim()||ph,description:$("description").value.trim()||"Game download",download:$("download").value.trim(),downloads:0});
+ save();e.target.reset();$("version").value="1.0";render();
+});
+render();
+</script>
+</body></html>
