@@ -1,2 +1,0 @@
-# gamehub
-GameHub gaming website
